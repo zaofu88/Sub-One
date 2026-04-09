@@ -81,7 +81,8 @@ const hasWhitespace = computed(() => {
         'mytoken',
         'profileToken',
         'BotToken',
-        'ChatID'
+        'ChatID',
+        'cronSecret'
     ];
 
     for (const key of fieldsToCkeck) {
@@ -656,6 +657,46 @@ watch(
                                     />
                                     <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
                                         当流量使用超过此百分比时发送提醒
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- 自动更新配置 -->
+                        <section>
+                            <h4
+                                class="mb-4 flex items-center gap-2 text-sm font-bold tracking-wider text-gray-500 uppercase dark:text-gray-400"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="h-4 w-4"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                自动更新(Cron)配置
+                            </h4>
+                            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                <div class="group md:col-span-2">
+                                    <label
+                                        for="cronSecret"
+                                        class="mb-2 block text-sm font-medium text-gray-700 transition-colors group-hover:text-indigo-600 dark:text-gray-300 dark:group-hover:text-indigo-400"
+                                    >
+                                        Cron 安全密钥（Token）
+                                    </label>
+                                    <input
+                                        id="cronSecret"
+                                        v-model="settings.cronSecret"
+                                        type="text"
+                                        class="input-modern-enhanced w-full"
+                                        placeholder="任意复杂的字符串，例如：my_secret_token"
+                                    />
+                                    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                                        留空将禁止外部触发。配置后，您可以使用第三方工具（如 UptimeRobot、宝塔计划任务或 GitHub Actions）定期请求：<br />
+                                        <code class="px-1 py-0.5 mt-1 bg-gray-100 dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 rounded inline-block select-all">/api/cron/trigger?token=您的密钥</code><br />
+                                        如果您使用的是 Cloudflare Pages，由于平台限制必须通过这种接口方式触发定时任务；Docker 用户自带内部定时器，可选择配置。
                                     </p>
                                 </div>
                             </div>

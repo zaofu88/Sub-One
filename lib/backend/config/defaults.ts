@@ -25,7 +25,10 @@ export const defaultSettings: AppConfig = {
 
     // 通知阈值
     NotifyThresholdDays: 3,
-    NotifyThresholdPercent: 90
+    NotifyThresholdPercent: 90,
+
+    // Cron 安全密钥
+    cronSecret: ''
 };
 
 export const GLOBAL_USER_AGENT = 'Clash.Meta/v1.19.19'; // Unified UA: Mihomo v1.19.19

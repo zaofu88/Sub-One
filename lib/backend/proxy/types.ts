@@ -390,6 +390,9 @@ export interface AppConfig {
     NotifyThresholdDays: number;
     NotifyThresholdPercent: number;
 
+    // Cron 配置
+    cronSecret?: string;
+
     // 其他
     [key: string]: any; // 允许扩展
 }

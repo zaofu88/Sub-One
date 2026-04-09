@@ -173,6 +173,35 @@ export async function handleApiRequest(request: Request, env: Env): Promise<Resp
         }
     }
 
+    if (path === '/cron/trigger') {
+        if (request.method !== 'POST' && request.method !== 'GET') {
+            return new Response('Method Not Allowed', { status: 405 });
+        }
+        try {
+            const storage = await getStorage(env);
+            const settings = (await storage.get<Partial<AppConfig>>(KV_KEY_SETTINGS)) || {};
+            const cronSecret = settings.cronSecret;
+
+            const urlParams = new URL(request.url).searchParams;
+            const queryToken = urlParams.get('token');
+            const authHeader = request.headers.get('Authorization');
+            let providedToken = queryToken;
+            if (authHeader && authHeader.startsWith('Bearer ')) {
+                providedToken = authHeader.substring(7);
+            }
+
+            if (!cronSecret || providedToken !== cronSecret) {
+                return new Response(JSON.stringify({ error: 'Unauthorized. Invalid cron secret.' }), { status: 401 });
+            }
+
+            const { handleCronTrigger } = await import('../cron/index');
+            return await handleCronTrigger(env);
+        } catch (e: any) {
+            console.error('[API Error /cron/trigger]', e);
+            return new Response(JSON.stringify({ error: 'Cron execute failed' }), { status: 500 });
+        }
+    }
+
     if (path === '/login') {
         if (request.method !== 'POST') return new Response('Method Not Allowed', { status: 405 });
         try {
